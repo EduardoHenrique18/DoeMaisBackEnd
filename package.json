@@ -1,0 +1,19 @@
+{
+  "name": "doemaisbackend",
+  "version": "1.0.0",
+  "description": "A donation facilitator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EduardoHenrique18/DoeMaisBackEnd.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EduardoHenrique18/DoeMaisBackEnd/issues"
+  },
+  "homepage": "https://github.com/EduardoHenrique18/DoeMaisBackEnd#readme"
+}
