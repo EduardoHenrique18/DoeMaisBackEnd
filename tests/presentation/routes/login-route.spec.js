@@ -1,5 +1,6 @@
 const LoginRouter = require('../../../src/presentation/routes/login-router')
 const MissingParamError = require('../../../src/presentation/helpers/missing-param-error')
+const UnauthorizedError = require('../../../src/presentation/helpers/unauthorizedError')
 
 const makeSut = () => {
   class AuthUseCaseSpy {
@@ -76,5 +77,6 @@ describe('Login router', () => {
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(401)
+    expect(httpResponse.body).toEqual(new UnauthorizedError())
   })
 })
