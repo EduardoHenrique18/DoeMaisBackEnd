@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/EduardoHenrique18/DoeMaisBackEnd/issues"
   },
-  "homepage": "https://github.com/EduardoHenrique18/DoeMaisBackEnd#readme"
+  "homepage": "https://github.com/EduardoHenrique18/DoeMaisBackEnd#readme",
+  "devDependencies": {
+    "standard": "^14.3.3"
+  }
 }
