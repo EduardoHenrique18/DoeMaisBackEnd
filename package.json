@@ -4,7 +4,8 @@
   "description": "A donation facilitator",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --watchAll",
+    "test:staged": "jest --passWithNoTests"
   },
   "repository": {
     "type": "git",
