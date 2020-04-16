@@ -18,7 +18,7 @@ describe('Login router', () => {
       }
     }
     const httpResponse = sut.route(httpRequest)
-    expect(httpResponse.statusCode).toBe(401)
+    expect(httpResponse.statusCode).toBe(400)
   })
 
   test('should return 400 if no password is provided', () => {

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll",
-    "test:staged": "npm test -- --findRelatedTests --silent"
+    "test:staged": "jest --findRelatedTests"
   },
   "repository": {
     "type": "git",
