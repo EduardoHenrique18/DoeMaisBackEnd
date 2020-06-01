@@ -115,7 +115,7 @@ describe('Create User UseCase', () => {
   test('Should call UserValidator with correct params', async () => {
     const { sut, userValidatorSpy } = makeSut()
     const httpRequest = {
-      body: {
+      user: {
         userName: 'any_name',
         email: 'any_email@email.com',
         password: 'any_password',
@@ -123,21 +123,20 @@ describe('Create User UseCase', () => {
       }
     }
     await sut.CreateUser(httpRequest)
-    expect(userValidatorSpy.user.userName).toBe(httpRequest.body.userName)
+    expect(userValidatorSpy.user.userName).toBe(httpRequest.userName)
   })
 
   test('Should call readUserByEmailRepository with correct params', async () => {
     const { sut, readUserRepositorySpy } = makeSut()
     const httpRequest = {
-      body: {
-        userName: 'any_name',
-        email: 'any_email@email.com',
-        password: 'any_password',
-        dateOfBirth: 'any_date'
-      }
+      userName: 'any_name',
+      email: 'any_email@email.com',
+      password: 'any_password',
+      dateOfBirth: 'any_date'
+
     }
     await sut.CreateUser(httpRequest)
-    expect(readUserRepositorySpy.user.userName).toBe(httpRequest.body.userName)
+    expect(readUserRepositorySpy.user.userName).toBe(httpRequest.userName)
   })
 
   test('Should call createUserRepository with correct params', async () => {
@@ -150,15 +149,13 @@ describe('Create User UseCase', () => {
         userValidatorSpy
       )
     const httpRequest = {
-      body: {
-        userName: 'any_name',
-        email: 'any_email@email.com',
-        password: 'any_password',
-        dateOfBirth: 'any_date'
-      }
+      userName: 'any_name',
+      email: 'any_email@email.com',
+      password: 'any_password',
+      dateOfBirth: 'any_date'
     }
     await sut.CreateUser(httpRequest)
-    expect(createUserRepositorySpy.user.userName).toBe(httpRequest.body.userName)
+    expect(createUserRepositorySpy.user.userName).toBe(httpRequest.userName)
   })
 
   test('Should throw if any dependency throws', async () => {
@@ -184,12 +181,10 @@ describe('Create User UseCase', () => {
     )
     for (const sut of suts) {
       const httpRequest = {
-        body: {
-          userName: 'any_name',
-          email: 'any_email@email.com',
-          password: 'any_password',
-          dateOfBirth: 'any_date'
-        }
+        userName: 'any_name',
+        email: 'any_email@email.com',
+        password: 'any_password',
+        dateOfBirth: 'any_date'
       }
       const httpResponse = await sut.CreateUser(httpRequest)
       expect(httpResponse.statusCode).toBe(500)
@@ -200,12 +195,10 @@ describe('Create User UseCase', () => {
   test('Should return 400 if an invalid user is provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
-      body: {
-        userName: 'name',
-        email: 'any_email@email.com',
-        password: 'any_password',
-        dateOfBirth: 'any_date'
-      }
+      userName: 'name',
+      email: 'any_email@email.com',
+      password: 'any_password',
+      dateOfBirth: 'any_date'
     }
     const httpResponse = await sut.CreateUser(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
@@ -215,12 +208,10 @@ describe('Create User UseCase', () => {
   test('Should return 409 if user already exist', async () => {
     const { sut } = makeSut()
     const httpRequest = {
-      body: {
-        userName: 'any_name',
-        email: 'AlreadyExist@email.com',
-        password: 'any_password',
-        dateOfBirth: 'any_date'
-      }
+      userName: 'any_name',
+      email: 'AlreadyExist@email.com',
+      password: 'any_password',
+      dateOfBirth: 'any_date'
     }
     const httpResponse = await sut.CreateUser(httpRequest)
     expect(httpResponse.statusCode).toBe(409)
@@ -237,16 +228,14 @@ describe('Create User UseCase', () => {
         userValidatorSpy
       )
     const httpRequest = {
-      body: {
-        userName: 'any_name',
-        email: 'AlreadyExist@email.com',
-        password: 'any_password',
-        dateOfBirth: 'any_date'
-      }
+      userName: 'any_name',
+      email: 'AlreadyExist@email.com',
+      password: 'any_password',
+      dateOfBirth: 'any_date'
     }
     const httpResponse = await sut.CreateUser(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
     expect(httpResponse.message).toBe('Successfully')
-    expect(httpResponse.data).toEqual(httpRequest.body)
+    expect(httpResponse.data).toEqual(httpRequest)
   })
 })

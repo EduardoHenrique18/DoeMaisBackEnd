@@ -12,7 +12,7 @@ module.exports = class CreateUserUseCase {
 
   async CreateUser (userParam) {
     try {
-      const { userName, password, dateOfBirth, email } = userParam.body
+      const { userName, password, dateOfBirth, email } = userParam
 
       const user = new User(userName, password, dateOfBirth, email)
 
