@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "test": "jest --watchAll --colors --coverage",
-    "test:staged": "jest -- --findRelatedTests --silent"
+    "test:staged": "jest -- --findRelatedTests --silent --passWithNoTests"
   },
   "repository": {
     "type": "git",
