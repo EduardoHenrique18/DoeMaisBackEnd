@@ -2,14 +2,16 @@ const User = require('../../entities/User')
 const InvalidParamError = require('../../utils/errors/invalid-param-error')
 const HttpResponse = require('../../utils/http-response')
 
-module.exports = class CreateUserUseCase {
-  constructor (readUserRepository, userValidator) {
+module.exports = class LoginUseCase {
+  constructor (readUserRepository, userValidator, hash, tokenGenerator) {
     this.userValidator = userValidator
     this.readUserRepository = readUserRepository
+    this.hash = hash
+    this.tokenGenerator = tokenGenerator
     this.httpResponse = HttpResponse
   }
 
-  async CreateUser (userParam) {
+  async Login (userParam) {
     try {
       const { userName, password, dateOfBirth, email } = userParam
 
@@ -17,13 +19,20 @@ module.exports = class CreateUserUseCase {
 
       this.userValidator.LoginValidator(user)
 
-      const user = await this.readUserRepository.ReadUserById(user)
+      const userSearched = await this.readUserRepository.ReadUserByEmail(user)
 
-      if (!user) {
+      if (!userSearched) {
         return this.httpResponse.unauthorizedError()
       }
 
-      return this.httpResponse.Ok(user)
+      const passwordCompared = await this.hash.compareHash(password, userSearched.password)
+
+      if (!passwordCompared) {
+        return this.httpResponse.unauthorizedError()
+      }
+
+      const token = await this.tokenGenerator.generate(userSearched.userId)
+      return this.httpResponse.Ok({ userSearched, token })
     } catch (error) {
       if (error instanceof InvalidParamError) {
         console.log(error)

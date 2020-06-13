@@ -1,33 +1,33 @@
-const CreateUserUseCase = require('../create-user-usecase')
+const LoginUsecase = require('../login-usecase')
 const { InvalidParamError } = require('../../../utils/errors')
 const HttpResponse = require('../../../utils/http-response')
 
 const makeSut = () => {
   const userValidatorSpy = makeUserValidator()
   const readUserRepositorySpy = makeReadUserByEmailRepository()
-  const createUserRepositorySpy = makeCreateUserRepositorySpy()
   const hash = makeHash()
-  const sut = new CreateUserUseCase(
-    createUserRepositorySpy,
+  const tokenGenerator = makeTokenGenerator()
+  const sut = new LoginUsecase(
     readUserRepositorySpy,
     userValidatorSpy,
-    hash
+    hash,
+    tokenGenerator
   )
   return {
     sut,
     readUserRepositorySpy,
-    createUserRepositorySpy,
     userValidatorSpy,
-    hash
+    hash,
+    tokenGenerator
   }
 }
 
 const makeUserValidator = () => {
   class UserValidatorSpy {
-    CreateUserValidator (User) {
+    LoginValidator (User) {
       this.user = User
-      if (this.user.userName.length < 5) {
-        throw new InvalidParamError('userName')
+      if (!this.user.email.includes('@')) {
+        throw new InvalidParamError('email')
       }
     }
   }
@@ -37,7 +37,7 @@ const makeUserValidator = () => {
 
 const makeUserValidatorWithError = () => {
   class UserValidatorSpy {
-    createUserValidatorSpy () {
+    LoginValidator () {
       throw new Error()
     }
   }
@@ -57,7 +57,20 @@ const makeHash = () => {
   return new Hash()
 }
 
-/* const makeHashWithError = () => {
+const makeHashWithFalseCompare = () => {
+  class Hash {
+    generateHash (field) {
+      return field
+    }
+
+    compareHash (field) {
+      return false
+    }
+  }
+  return new Hash()
+}
+
+const makeHashWithError = () => {
   class Hash {
     generateHash () {
       throw new Error()
@@ -68,15 +81,12 @@ const makeHash = () => {
     }
   }
   return new Hash()
-} */
+}
 
 const makeReadUserByEmailRepository = () => {
   class ReadUserByEmailRepositorySpy {
     async ReadUserByEmail (User) {
       this.user = User
-      if (this.user.email === 'AlreadyExist@email.com') {
-        return HttpResponse.conflictError('User Already Exist')
-      }
       return this.user
     }
   }
@@ -84,7 +94,7 @@ const makeReadUserByEmailRepository = () => {
   return readUserByEmailRepositorySpy
 }
 
-const makeReadUserByEmailRepositoryUserAlreadyExist = () => {
+const makeReadUserByEmailRepositoryUserDontExist = () => {
   class ReadUserByEmailRepositorySpy {
     async ReadUserByEmail (User) {
       this.user = User
@@ -105,38 +115,37 @@ const makeReadUserByEmailRepositoryWithError = () => {
   return readUserByEmailRepositorySpy
 }
 
-const makeCreateUserRepositorySpy = () => {
-  class CreateUserByEmailRepositorySpy {
-    async CreateUser (User) {
-      this.user = User
-      return this.user
+const makeTokenGenerator = () => {
+  class TokenGenerator {
+    async generate (userId) {
+      return 'token'
     }
   }
-  const createUserByEmailRepositorySpy = new CreateUserByEmailRepositorySpy()
-  return createUserByEmailRepositorySpy
+  const tokenGenerator = new TokenGenerator()
+  return tokenGenerator
 }
 
-const makeCreateUserRepositorySpyWithError = () => {
-  class CreateUserByEmailRepositorySpy {
-    async CreateUser () {
+const makeTokenGeneratorWithError = () => {
+  class TokenGenerator {
+    async generate (userId) {
       throw new Error()
     }
   }
-  const createUserByEmailRepositorySpy = new CreateUserByEmailRepositorySpy()
-  return createUserByEmailRepositorySpy
+  const tokenGenerator = new TokenGenerator()
+  return tokenGenerator
 }
 
-describe('Create User UseCase', () => {
+describe('Login UseCase', () => {
   test('Should return 500 if no userParam is provided', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.CreateUser()
+    const httpResponse = await sut.Login()
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.message).toBe(HttpResponse.ServerError().message)
   })
 
   test('Should return 500 if userParam has no body', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.CreateUser({})
+    const httpResponse = await sut.Login({})
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.message).toBe(HttpResponse.ServerError().message)
   })
@@ -151,7 +160,7 @@ describe('Create User UseCase', () => {
         dateOfBirth: 'any_date'
       }
     }
-    await sut.CreateUser(httpRequest)
+    await sut.Login(httpRequest)
     expect(userValidatorSpy.user.userName).toBe(httpRequest.userName)
   })
 
@@ -164,49 +173,39 @@ describe('Create User UseCase', () => {
       dateOfBirth: 'any_date'
 
     }
-    await sut.CreateUser(httpRequest)
+    await sut.Login(httpRequest)
     expect(readUserRepositorySpy.user.userName).toBe(httpRequest.userName)
   })
 
-  test('Should call createUserRepository with correct params', async () => {
-    const { createUserRepositorySpy, userValidatorSpy, hash } = makeSut()
-    const ReadUserByEmailRepositoryUserAlreadyExist = makeReadUserByEmailRepositoryUserAlreadyExist()
-    const sut =
-      new CreateUserUseCase(
-        createUserRepositorySpy,
-        ReadUserByEmailRepositoryUserAlreadyExist,
-        userValidatorSpy,
-        hash
-      )
-    const httpRequest = {
-      userName: 'any_name',
-      email: 'any_email@email.com',
-      password: 'any_password',
-      dateOfBirth: 'any_date'
-    }
-    await sut.CreateUser(httpRequest)
-    expect(createUserRepositorySpy.user.userName).toBe(httpRequest.userName)
-  })
-
   test('Should throw if any dependency throws', async () => {
-    const createUserRepositorySpy = makeCreateUserRepositorySpy()
+    const hash = makeHash()
     const readUserByEmailRepository = makeReadUserByEmailRepository()
     const userValidatorSpy = makeUserValidator()
+    const tokenGenerator = makeTokenGenerator()
     const suts = [].concat(
-      new CreateUserUseCase({
-        createUserRepositorySpy: makeCreateUserRepositorySpyWithError(),
+      new LoginUsecase({
+        hash: makeHashWithError(),
         readUserByEmailRepository,
-        userValidatorSpy
+        userValidatorSpy,
+        tokenGenerator
       }),
-      new CreateUserUseCase({
-        createUserRepositorySpy,
+      new LoginUsecase({
+        hash,
         readUserByEmailRepository: makeReadUserByEmailRepositoryWithError(),
-        userValidatorSpy
+        userValidatorSpy,
+        tokenGenerator
       }),
-      new CreateUserUseCase({
-        createUserRepositorySpy,
+      new LoginUsecase({
+        hash,
         readUserByEmailRepository,
-        userValidatorSpy: makeUserValidatorWithError()
+        userValidatorSpy: makeUserValidatorWithError(),
+        tokenGenerator
+      }),
+      new LoginUsecase({
+        hash,
+        readUserByEmailRepository,
+        userValidatorSpy,
+        tokenGenerator: makeTokenGeneratorWithError()
       })
     )
     for (const sut of suts) {
@@ -216,7 +215,7 @@ describe('Create User UseCase', () => {
         password: 'any_password',
         dateOfBirth: 'any_date'
       }
-      const httpResponse = await sut.CreateUser(httpRequest)
+      const httpResponse = await sut.Login(httpRequest)
       expect(httpResponse.statusCode).toBe(500)
       expect(httpResponse.message).toBe(HttpResponse.ServerError().message)
     }
@@ -226,37 +225,47 @@ describe('Create User UseCase', () => {
     const { sut } = makeSut()
     const httpRequest = {
       userName: 'name',
-      email: 'any_email@email.com',
+      email: 'any_emailemail.com',
       password: 'any_password',
       dateOfBirth: 'any_date'
     }
-    const httpResponse = await sut.CreateUser(httpRequest)
+    const httpResponse = await sut.Login(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.message).toBe(new InvalidParamError('userName').message)
+    expect(httpResponse.message).toBe(new InvalidParamError('email').message)
   })
 
-  test('Should return 409 if user already exist', async () => {
+  test('Should return 200 if user was created with sucess', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       userName: 'any_name',
       email: 'AlreadyExist@email.com',
       password: 'any_password',
-      dateOfBirth: 'any_date'
+      dateOfBirth: '2000/01/16'
     }
-    const httpResponse = await sut.CreateUser(httpRequest)
-    expect(httpResponse.statusCode).toBe(409)
-    expect(httpResponse.message).toBe('User Already Exist')
+    const response = {
+      token: 'token',
+      userSearched: {
+        dateOfBirth: '2000/01/16',
+        email: 'AlreadyExist@email.com',
+        password: 'any_password',
+        userName: 'any_name'
+      }
+    }
+    const httpResponse = await sut.Login(httpRequest)
+    expect(httpResponse.statusCode).toBe(200)
+    expect(httpResponse.message).toBe('Successfully')
+    expect(httpResponse.data).toEqual(response)
   })
 
-  test('Should return 200 if user was created with sucess', async () => {
-    const { createUserRepositorySpy, userValidatorSpy, hash } = makeSut()
-    const ReadUserByEmailRepositoryUserAlreadyExist = makeReadUserByEmailRepositoryUserAlreadyExist()
+  test('Should return 401 if user dont exist', async () => {
+    const { userValidatorSpy, hash, tokenGenerator } = makeSut()
+    const makeReadUserByEmailRepository = makeReadUserByEmailRepositoryUserDontExist()
     const sut =
-      new CreateUserUseCase(
-        createUserRepositorySpy,
-        ReadUserByEmailRepositoryUserAlreadyExist,
+      new LoginUsecase(
+        makeReadUserByEmailRepository,
         userValidatorSpy,
-        hash
+        hash,
+        tokenGenerator
       )
     const httpRequest = {
       userName: 'any_name',
@@ -264,9 +273,29 @@ describe('Create User UseCase', () => {
       password: 'any_password',
       dateOfBirth: '2000/01/16'
     }
-    const httpResponse = await sut.CreateUser(httpRequest)
-    expect(httpResponse.statusCode).toBe(200)
-    expect(httpResponse.message).toBe('Successfully')
-    expect(httpResponse.data).toEqual(httpRequest)
+
+    const httpResponse = await sut.Login(httpRequest)
+    expect(httpResponse.statusCode).toBe(401)
+  })
+
+  test('Should return 401 if pasword isnt correct', async () => {
+    const { userValidatorSpy, tokenGenerator, readUserRepositorySpy } = makeSut()
+    const hash = makeHashWithFalseCompare()
+    const sut =
+      new LoginUsecase(
+        readUserRepositorySpy,
+        userValidatorSpy,
+        hash,
+        tokenGenerator
+      )
+    const httpRequest = {
+      userName: 'any_name',
+      email: 'AlreadyExist@email.com',
+      password: 'any_password',
+      dateOfBirth: '2000/01/16'
+    }
+
+    const httpResponse = await sut.Login(httpRequest)
+    expect(httpResponse.statusCode).toBe(401)
   })
 })

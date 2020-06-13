@@ -3,10 +3,11 @@ const InvalidParamError = require('../../utils/errors/invalid-param-error')
 const HttpResponse = require('../../utils/http-response')
 
 module.exports = class CreateUserUseCase {
-  constructor (createUserRepository, readUserRepository, userValidator) {
+  constructor (createUserRepository, readUserRepository, userValidator, hash) {
     this.createUserRepository = createUserRepository
     this.userValidator = userValidator
     this.readUserRepository = readUserRepository
+    this.hash = hash
     this.httpResponse = HttpResponse
   }
 
@@ -18,11 +19,13 @@ module.exports = class CreateUserUseCase {
 
       this.userValidator.CreateUserValidator(user)
 
-      const userAlreadyExist = await this.readUserRepository.ReadUserById(user)
+      const userAlreadyExist = await this.readUserRepository.ReadUserByEmail(user)
 
       if (userAlreadyExist) {
         return this.httpResponse.conflictError('User Already Exist')
       }
+
+      user.password = await this.hash.generateHash(user.password)
 
       const createdUser = await this.createUserRepository.CreateUser(user)
 

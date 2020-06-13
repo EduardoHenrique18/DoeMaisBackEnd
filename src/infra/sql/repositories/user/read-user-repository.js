@@ -1,14 +1,13 @@
 const User = require('../../entities-db/user')
 
 module.exports = class ReadUserRepository {
-  async ReadUserById (user) {
-    const { email, password } = user
+  async ReadUserByEmail (userParam) {
+    const { email } = userParam
 
     const user = await User.findOne({
       where: {
-        email: email,
-        password: password
-      }     
+        email: email
+      }
     })
 
     return user
