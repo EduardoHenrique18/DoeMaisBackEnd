@@ -45,7 +45,7 @@ const makeReadPointByEmailRepository = () => {
   class ReadPointByEmailRepositorySpy {
     async ReadPointById (Point) {
       this.point = Point
-      if (this.point.userEmail === 'AlreadyExist@email.com') {
+      if (this.point.useremail === 'AlreadyExist@email.com') {
         return HttpResponse.conflictError('Point Already Exist')
       }
       return this.point
@@ -120,7 +120,7 @@ describe('Create Point UseCase', () => {
         latitude: 'any_latitude',
         longitude: 'any_longitude',
         description: 'any_description',
-        userEmail: 'anu_email@email.com'
+        useremail: 'anu_email@email.com'
       }
     }
     await sut.CreatePoint(httpRequest)
@@ -134,7 +134,7 @@ describe('Create Point UseCase', () => {
       latitude: 'any_latitude',
       longitude: 'any_longitude',
       description: 'any_description',
-      userEmail: 'anu_email@email.com'
+      useremail: 'any_email@email.com'
 
     }
     await sut.CreatePoint(httpRequest)
@@ -155,7 +155,7 @@ describe('Create Point UseCase', () => {
       latitude: 'any_latitude',
       longitude: 'any_longitude',
       description: 'any_description',
-      userEmail: 'any_email@email.com'
+      useremail: 'any_email@email.com'
     }
     await sut.CreatePoint(httpRequest)
     expect(createPointRepositorySpy.point.name).toBe(httpRequest.name)
@@ -188,7 +188,7 @@ describe('Create Point UseCase', () => {
         latitude: 'any_latitude',
         longitude: 'any_longitude',
         description: 'any_description',
-        userEmail: 'any_email@email.com'
+        useremail: 'any_email@email.com'
       }
       const httpResponse = await sut.CreatePoint(httpRequest)
       expect(httpResponse.statusCode).toBe(500)
@@ -203,7 +203,7 @@ describe('Create Point UseCase', () => {
       latitude: 'any_latitude',
       longitude: 'any_longitude',
       description: 'any_description',
-      userEmail: 'any_email@email.com'
+      useremail: 'any_email@email.com'
     }
     const httpResponse = await sut.CreatePoint(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
@@ -217,7 +217,7 @@ describe('Create Point UseCase', () => {
       latitude: 'any_latitude',
       longitude: 'any_longitude',
       description: 'any_description',
-      userEmail: 'AlreadyExist@email.com'
+      useremail: 'AlreadyExist@email.com'
     }
     const httpResponse = await sut.CreatePoint(httpRequest)
     expect(httpResponse.statusCode).toBe(409)
@@ -238,7 +238,7 @@ describe('Create Point UseCase', () => {
       latitude: 'any_latitude',
       longitude: 'any_longitude',
       description: 'any_description',
-      userEmail: 'AlreadyExist@email.com'
+      useremail: 'AlreadyExist@email.com'
     }
     const httpResponse = await sut.CreatePoint(httpRequest)
     expect(httpResponse.statusCode).toBe(200)

@@ -9,7 +9,7 @@ routes.post('/user', (request, response) => {
 })
 
 routes.post('/point', (request, response) => {
-  new CreatePointController().createPoint(request, response)
+  new CreatePointController().CreatePoint(request, response)
 })
 
 module.exports = routes

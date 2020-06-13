@@ -4,12 +4,12 @@ module.exports = class CreatePointRepository {
   CreatePoint (point) {
     const { name, latitude, longitude, description, userEmail } = point
 
-    return Point.create({
+    return Point.update({
       name,
       latitude,
       longitude,
       description,
-      useremail: userEmail
+      userEmail
     })
   }
 }

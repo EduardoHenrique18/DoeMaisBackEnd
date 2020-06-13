@@ -1,16 +1,16 @@
 const Point = require('../../entities-db/point')
 
 module.exports = class ReadPointRepository {
-  async ReadPointById (point) {
-    const { idPoint } = point
+  async ReadPointByLongAndLat (point) {
+    const { longitude, latitude } = point
 
     const read = await Point.findOne({
       where: {
-        idPoint: idPoint
-      },
-      order: [['createdAt', 'DESC']]
+        longitude: longitude,
+        latitude: latitude
+      }
     })
-
+    console.log(read)
     return read
   }
 }
