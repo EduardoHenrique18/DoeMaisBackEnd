@@ -2,10 +2,13 @@ const Point = require('../../entities-db/point')
 
 module.exports = class ReadAllPointRepository {
   async ReadAllPoint () {
-    const read = await Point.findAll({
-      where: { delet: false }
-    })
-    console.log(read)
-    return read
+    try {
+      const read = await Point.findAll({
+        where: { delet: false }
+      })
+      return read
+    } catch (err) {
+      return err
+    }
   }
 }
