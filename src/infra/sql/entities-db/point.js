@@ -25,6 +25,9 @@ const Point = Sequelize.define('point', {
     references: 'users',
     referencesKey: 'userEmail'
   },
+  delet: {
+    type: DataTypes.CHAR
+  },
   createdAt: { type: DataTypes.DATE }
 })
 

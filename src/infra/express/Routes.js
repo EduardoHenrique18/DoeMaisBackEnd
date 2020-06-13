@@ -3,6 +3,7 @@ const CreateUserController = require('../../controllers/User/create-user-control
 const CreatePointController = require('../../controllers/Point/create-point-controller')
 const UpdatePointController = require('../../controllers/Point/update-point-controller')
 const ReadAllPointController = require('../../controllers/Point/readAll-point-controller')
+const DeletePointController = require('../../controllers/Point/delete-point-controller')
 const routes = Router()
 
 routes.post('/user', (request, response) => {
@@ -19,6 +20,10 @@ routes.put('/point', (request, response) => {
 
 routes.get('/point', (request, response) => {
   new ReadAllPointController().ReadAllPoint(request, response)
+})
+
+routes.delete('/point', (request, response) => {
+  new DeletePointController().DeletePoint(request, response)
 })
 
 module.exports = routes
