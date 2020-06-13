@@ -24,4 +24,18 @@ module.exports = class UserValidator {
       throw new InvalidParamError('dateOfBirth')
     }
   }
+  LoginValidator(user){
+    const { userName, password } = user
+    if (
+      Validate.isEmpty(userName) ||
+      !Validate.isAlphanumeric(userName) ||
+      !Validate.isByteLength(userName, { min: 5, max: 30 })) {
+      throw new InvalidParamError('userName')
+    } else if (
+      Validate.isEmpty(password) ||
+      !Validate.isAlphanumeric(password) ||
+      !Validate.isByteLength(password, { min: 5, max: 15 })) {
+      throw new InvalidParamError('password')
+  }
+ }
 }
