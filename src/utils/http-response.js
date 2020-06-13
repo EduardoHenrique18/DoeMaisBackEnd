@@ -24,5 +24,4 @@ module.exports = class HttpResponse {
   static unauthorizedError () {
     return new ReturnMessage('unauthorizedError', 401)
   }
-
 }
