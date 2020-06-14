@@ -4,10 +4,14 @@ const CreatePointController = require('../../controllers/Point/create-point-cont
 const UpdatePointController = require('../../controllers/Point/update-point-controller')
 const ReadAllPointController = require('../../controllers/Point/readAll-point-controller')
 const DeletePointController = require('../../controllers/Point/delete-point-controller')
+const LoginController = require('../../controllers/user/Login-controller')
 const routes = Router()
 
 routes.post('/user', (request, response) => {
   new CreateUserController().CreateUser(request, response)
+})
+routes.post('/login', (request, response) => {
+  new LoginController().Login(request, response)
 })
 
 routes.post('/point', (request, response) => {

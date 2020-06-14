@@ -2,34 +2,37 @@ const User = require('../../entities/User')
 const InvalidParamError = require('../../utils/errors/invalid-param-error')
 const HttpResponse = require('../../utils/http-response')
 
-module.exports = class CreateUserUseCase {
-  constructor (createUserRepository, readUserRepository, userValidator, hash) {
-    this.createUserRepository = createUserRepository
+module.exports = class LoginUseCase {
+  constructor (readUserRepository, userValidator, hash, tokenGenerator) {
     this.userValidator = userValidator
     this.readUserRepository = readUserRepository
     this.hash = hash
+    this.tokenGenerator = tokenGenerator
     this.httpResponse = HttpResponse
   }
 
-  async CreateUser (userParam) {
+  async Login (userParam) {
     try {
       const { userName, password, dateOfBirth, email } = userParam
 
       const user = new User(userName, password, dateOfBirth, email)
 
-      this.userValidator.CreateUserValidator(user)
+      this.userValidator.LoginValidator(user)
 
-      const userAlreadyExist = await this.readUserRepository.ReadUserByEmail(user)
+      const userSearched = await this.readUserRepository.ReadUserByEmail(user)
 
-      if (userAlreadyExist) {
-        return this.httpResponse.conflictError('User Already Exist')
+      if (!userSearched) {
+        return this.httpResponse.unauthorizedError()
       }
 
-      user.password = await this.hash.generateHash(user.password)
+      const passwordCompared = await this.hash.compareHash(password, userSearched.password)
 
-      const createdUser = await this.createUserRepository.CreateUser(user)
+      if (!passwordCompared) {
+        return this.httpResponse.unauthorizedError()
+      }
 
-      return this.httpResponse.Ok(createdUser)
+      const token = await this.tokenGenerator.generate(userSearched.userId)
+      return this.httpResponse.Ok({ userSearched, token })
     } catch (error) {
       if (error instanceof InvalidParamError) {
         console.log(error)

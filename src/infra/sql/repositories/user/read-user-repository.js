@@ -1,16 +1,15 @@
 const User = require('../../entities-db/user')
 
 module.exports = class ReadUserRepository {
-  async ReadUserById (user) {
-    const { email } = user
+  async ReadUserByEmail (userParam) {
+    const { email } = userParam
 
-    const teste = await User.findOne({
+    const user = await User.findOne({
       where: {
         email: email
-      },
-      order: [['createdAt', 'DESC']]
+      }
     })
 
-    return teste
+    return user
   }
 }
