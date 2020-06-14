@@ -5,29 +5,33 @@ const UpdatePointController = require('../../controllers/Point/update-point-cont
 const ReadAllPointController = require('../../controllers/Point/readAll-point-controller')
 const DeletePointController = require('../../controllers/Point/delete-point-controller')
 const LoginController = require('../../controllers/user/Login-controller')
+const auth = require('../../utils/auth/auth')
 const routes = Router()
 
-routes.post('/user', (request, response) => {
-  new CreateUserController().CreateUser(request, response)
-})
-routes.post('/login', (request, response) => {
-  new LoginController().Login(request, response)
-})
+routes.route('/user')
+  .post(auth, (request, response) => {
+    new CreateUserController().CreateUser(request, response)
+  })
 
-routes.post('/point', (request, response) => {
-  new CreatePointController().CreatePoint(request, response)
-})
+routes.route('/login')
+  .post((request, response) => {
+    new LoginController().Login(request, response)
+  })
 
-routes.put('/point', (request, response) => {
-  new UpdatePointController().UpdatePoint(request, response)
-})
+routes.route('/point')
+  .post(auth, (request, response) => {
+    new CreatePointController().CreatePoint(request, response)
+  })
+  .put(auth, (request, response) => {
+    new UpdatePointController().UpdatePoint(request, response)
+  })
+  .get(auth, (request, response) => {
+    new ReadAllPointController().ReadAllPoint(request, response)
+  })
 
-routes.get('/point', (request, response) => {
-  new ReadAllPointController().ReadAllPoint(request, response)
-})
-
-routes.delete('/point', (request, response) => {
-  new DeletePointController().DeletePoint(request, response)
-})
+routes.route('/point/:pointId')
+  .delete(auth, (request, response) => {
+    new DeletePointController().DeletePoint(request, response)
+  })
 
 module.exports = routes

@@ -1,4 +1,4 @@
-const UpdatePointUseCase = require('../../use-cases/point/update-point-usercase')
+const UpdatePointUseCase = require('../../use-cases/point/update-point-usecase')
 const UpdatePointRepository = require('../../Infra/Sql/Repositories/Point/update-point-repository')
 const ReadPointRepository = require('../../Infra/Sql/Repositories/Point/read-point-repository')
 const PointValidator = require('../../utils/validators/point-validator')
@@ -13,7 +13,6 @@ module.exports = class UpdatePointController {
 
   async UpdatePoint (request, response) {
     const returnMessage = await this.updatePointUseCase.UpdatePoint(request.body)
-    console.log(returnMessage)
     response.status(returnMessage.statusCode).send(returnMessage)
   }
 }

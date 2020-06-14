@@ -15,7 +15,6 @@ module.exports = class CreateUserController {
 
   async CreateUser (request, response) {
     const returnMessage = await this.createUserUseCase.CreateUser(request.body)
-    console.log(returnMessage)
     response.status(returnMessage.statusCode).send(returnMessage)
   }
 }

@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize')
 
-module.exports = new Sequelize('ficr_teste', 'postgres', '123', {
+module.exports = new Sequelize('donation', 'root', '1123', {
   host: 'localhost',
-  dialect: 'postgres',
+  dialect: 'mysql',
   pool: {
     max: 5,
     min: 0,

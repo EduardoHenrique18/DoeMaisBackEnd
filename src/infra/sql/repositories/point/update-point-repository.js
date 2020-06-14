@@ -1,21 +1,23 @@
 const Point = require('../../entities-db/point')
+const ServerError = require('../../../../utils/errors/server-error')
 
 module.exports = class UpdatePointRepository {
   async UpdatePoint (point) {
     try {
-      const { idpoint, name, latitude, longitude, description, userEmail } = point
+      const { pointId, name, latitude, longitude, description, image, userEmail } = point
 
       return Point.update({
         name,
+        image,
         latitude,
         longitude,
         description,
         userEmail
       }, {
-        where: { idpoint }
+        where: { pointId }
       })
     } catch (err) {
-      return err
+      throw new ServerError()
     }
   }
 }

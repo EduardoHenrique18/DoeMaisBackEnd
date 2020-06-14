@@ -6,7 +6,7 @@ module.exports = class UserValidator {
     const { userName, email, password, dateOfBirth } = user
     if (
       Validate.isEmpty(userName) ||
-      !Validate.isAlphanumeric(userName) ||
+      !Validate.matches(userName, /^[A-Za-z0-9\s]+[A-Za-z0-9\s]+$(\.0-9+)?/g) ||
       !Validate.isByteLength(userName, { min: 5, max: 30 })) {
       throw new InvalidParamError('userName')
     } else if (
@@ -29,7 +29,7 @@ module.exports = class UserValidator {
     const { userName, password } = user
     if (
       Validate.isEmpty(userName) ||
-      !Validate.isAlphanumeric(userName) ||
+      !Validate.matches(userName, /^[A-Za-z0-9\s]+[A-Za-z0-9\s]+$(\.0-9+)?/g) ||
       !Validate.isByteLength(userName, { min: 5, max: 30 })) {
       throw new InvalidParamError('userName')
     } else if (

@@ -1,4 +1,4 @@
-const DeletePointUseCase = require('../../use-cases/point/delete-point-usercase')
+const DeletePointUseCase = require('../../use-cases/point/delete-point-usecase')
 const DeletePointRepository = require('../../Infra/Sql/Repositories/Point/delete-point-repository')
 
 module.exports = class DeletePointController {
@@ -8,8 +8,7 @@ module.exports = class DeletePointController {
   }
 
   async DeletePoint (request, response) {
-    const returnMessage = await this.deletePointUseCase.DeletePoint(request.body)
-    console.log(returnMessage)
+    const returnMessage = await this.deletePointUseCase.DeletePoint(request.params)
     response.status(returnMessage.statusCode).send(returnMessage)
   }
 }

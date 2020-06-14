@@ -26,7 +26,7 @@ const auth = (request, response, next) => {
       }
       response.status(401).send({ message: 'Invalid Token' })
     }
-    request.userId = decoded.id
+    request.body.userId = decoded.id
     return next()
   })
 }

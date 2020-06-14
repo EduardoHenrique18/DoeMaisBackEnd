@@ -3,61 +3,65 @@ const Validate = require('validator')
 
 module.exports = class PointValidator {
   CreatePointValidator (point) {
-    const { name, latitude, longitude, description, userEmail } = point
+    const { name, latitude, longitude, description, userId, image } = point
     if (
       Validate.isEmpty(name) ||
-            !Validate.isAlphanumeric(name) ||
-            !Validate.isByteLength(name, { min: 5, max: 50 })) {
+        !Validate.matches(name, /^[A-Za-z0-9\s]+[A-Za-z0-9\s]+$(\.0-9+)?/g) ||
+        !Validate.isByteLength(name, { min: 5, max: 50 })) {
+      console.log('opa nome')
       throw new InvalidParamError('name')
     } else if (
-      Validate.isEmpty(latitude) ||
-            !Validate.isAlphanumeric(latitude) ||
-            !Validate.isByteLength(latitude, { min: 5, max: 10 })) {
+      !Validate.matches(latitude, /([-+]?(([1-8]?\d(\.\d+))+|90))/g)) {
+      console.log('opa latitude')
       throw new InvalidParamError('latitude')
     } else if (
-      Validate.isEmpty(longitude) ||
-            !Validate.isAlphanumeric(longitude) ||
-            !Validate.isByteLength(longitude, { min: 5, max: 10 })) {
+      !Validate.matches(longitude, /([-+]?(([1-8]?\d(\.\d+))+|90))/g)) {
+      console.log('opa longitude')
       throw new InvalidParamError('longitude')
     } else if (
       Validate.isEmpty(description) ||
-            !Validate.isAlphanumeric(description) ||
-            !Validate.isByteLength(description, { min: 5, max: 50 })) {
+      !Validate.matches(description, /^[A-Za-z0-9\s]+[A-Za-z0-9\s]+$(\.0-9+)?/g) ||
+        !Validate.isByteLength(description, { min: 5, max: 50 })) {
+      console.log('opa description')
       throw new InvalidParamError('description')
     } else if (
-      Validate.isEmpty(userEmail) ||
-            !Validate.isEmail(userEmail)) {
-      throw new InvalidParamError('userEmail')
+      !Validate.matches(image, /data:([^"]+)*/gm)
+    ) {
+      throw new InvalidParamError('image')
+    } else if (
+      Validate.default.isEmpty(userId.toString()) ||
+      !Validate.isNumeric(userId.toString())) {
+      throw new InvalidParamError('userId')
     }
   }
 
   UpdatePointValidator (point) {
-    const { name, latitude, longitude, description, userEmail } = point
+    const { name, latitude, longitude, description, userId, image } = point
     console.log(point)
     if (
       Validate.isEmpty(name) ||
-            !Validate.isAlphanumeric(name) ||
-            !Validate.isByteLength(name, { min: 5, max: 50 })) {
+        !Validate.matches(name, /^[A-Za-z0-9\s]+[A-Za-z0-9\s]+$(\.0-9+)?/g) ||
+        !Validate.isByteLength(name, { min: 5, max: 50 })) {
       throw new InvalidParamError('name')
     } else if (
-      Validate.isEmpty(latitude) ||
-            !Validate.isAlphanumeric(latitude) ||
-            !Validate.isByteLength(latitude, { min: 5, max: 10 })) {
+      !Validate.matches(latitude, /([-+]?(([1-8]?\d(\.\d+))+|90))/g)) {
       throw new InvalidParamError('latitude')
     } else if (
-      Validate.isEmpty(longitude) ||
-            !Validate.isAlphanumeric(longitude) ||
-            !Validate.isByteLength(longitude, { min: 5, max: 10 })) {
+      !Validate.matches(longitude, /([-+]?(([1-8]?\d(\.\d+))+|90))/g)) {
       throw new InvalidParamError('longitude')
     } else if (
       Validate.isEmpty(description) ||
-            !Validate.isAlphanumeric(description) ||
-            !Validate.isByteLength(description, { min: 5, max: 50 })) {
+      !Validate.matches(description, /^[A-Za-z0-9\s]+[A-Za-z0-9\s]+$(\.0-9+)?/g) ||
+        !Validate.isByteLength(description, { min: 5, max: 50 })) {
       throw new InvalidParamError('description')
     } else if (
-      Validate.isEmpty(userEmail) ||
-            !Validate.isEmail(userEmail)) {
-      throw new InvalidParamError('useremail')
+      Validate.isEmpty(userId.toString()) ||
+      !Validate.isNumeric(userId.toString())) {
+      throw new InvalidParamError('userId')
+    } else if (
+      !Validate.matches(image, /data:([^"]+)*/gm)
+    ) {
+      throw new InvalidParamError('image')
     }
   }
 }

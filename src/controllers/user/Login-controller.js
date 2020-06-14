@@ -15,7 +15,6 @@ module.exports = class LoginController {
 
   async Login (request, response) {
     const returnMessage = await this.LoginUseCase.Login(request.body)
-    console.log(returnMessage)
     response.status(returnMessage.statusCode).send(returnMessage)
   }
 }

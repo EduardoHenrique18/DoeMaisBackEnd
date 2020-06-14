@@ -1,5 +1,5 @@
-const ReadAllPointUseCase = require('../../use-cases/point/readAll-point-usercase')
-const ReadAllPointRepository = require('../../Infra/Sql/Repositories/Point/readAll-point-repository')
+const ReadAllPointUseCase = require('../../use-cases/point/readAll-point-usecase')
+const ReadAllPointRepository = require('../../Infra/Sql/Repositories/Point/read-point-repository')
 
 module.exports = class ReadAllPointController {
   constructor () {
@@ -9,7 +9,6 @@ module.exports = class ReadAllPointController {
 
   async ReadAllPoint (request, response) {
     const returnMessage = await this.readAllPointUseCase.ReadAllPoint(request.body)
-    console.log(returnMessage)
     response.status(returnMessage.statusCode).send(returnMessage)
   }
 }

@@ -12,10 +12,9 @@ module.exports = class CreatePointUseCase {
 
   async CreatePoint (pointParam) {
     try {
-      const { name, latitude, longitude, description, useremail } = pointParam
+      const { name, latitude, longitude, description, image, userId } = pointParam
 
-      const point = new Point(name, latitude, longitude, description, useremail)
-      // console.log(point)
+      const point = new Point(name, latitude, longitude, description, userId, image)
 
       this.pointValidator.CreatePointValidator(point)
 
@@ -24,7 +23,6 @@ module.exports = class CreatePointUseCase {
       if (pointAlreadyExist) {
         return this.httpResponse.conflictError('Point Already Exist')
       }
-
       const createdPoint = await this.createPointRepository.CreatePoint(point)
 
       return this.httpResponse.Ok(createdPoint)

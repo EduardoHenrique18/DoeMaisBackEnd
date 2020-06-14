@@ -2,7 +2,7 @@ const Sequelize = require('../config/db')
 const { DataTypes } = require('sequelize')
 
 const Point = Sequelize.define('point', {
-  idpoint: {
+  pointId: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true
@@ -12,21 +12,29 @@ const Point = Sequelize.define('point', {
     allowNull: false
   },
   latitude: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    allowNull: false
   },
   longitude: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    allowNull: false
   },
   description: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    allowNull: false
   },
-  useremail: {
+  userId: {
     type: DataTypes.STRING,
     references: 'users',
-    referencesKey: 'userEmail'
+    referencesKey: 'userId'
   },
-  delet: {
-    type: DataTypes.CHAR
+  disable: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  image: {
+    type: DataTypes.TEXT,
+    allowNull: false
   },
   createdAt: { type: DataTypes.DATE }
 })

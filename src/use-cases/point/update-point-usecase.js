@@ -12,21 +12,15 @@ module.exports = class UpdatePointUseCase {
 
   async UpdatePoint (pointParam) {
     try {
-      const { idpoint, name, latitude, longitude, description, useremail } = pointParam
+      const { name, latitude, longitude, description, image, userId, pointId } = pointParam
 
-      const point = new Point(name, latitude, longitude, description, useremail, idpoint)
+      const point = new Point(name, latitude, longitude, description, userId, image, pointId)
 
       this.pointValidator.UpdatePointValidator(point)
 
-      const pointAlreadyExist = await this.readPointRepository.ReadPointByLongAndLat(point)
+      await this.updatePointRepository.UpdatePoint(point)
 
-      if (pointAlreadyExist) {
-        return this.httpResponse.conflictError('Point Already Exist')
-      }
-
-      const updatedPoint = await this.updatePointRepository.UpdatePoint(point)
-
-      return this.httpResponse.Ok(updatedPoint)
+      return this.httpResponse.Ok({ user: name, latitude, longitude, description, image, userId, pointId })
     } catch (error) {
       if (error instanceof InvalidParamError) {
         console.log(error)

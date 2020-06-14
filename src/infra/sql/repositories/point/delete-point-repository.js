@@ -1,18 +1,19 @@
 const Point = require('../../entities-db/point')
+const ServerError = require('../../../../utils/errors/server-error')
 
 module.exports = class DeletePointRepository {
   async DeletePoint (point) {
     try {
-      const { idpoint, delet } = point
+      const { pointId } = point
 
-      return Point.update({
-        delet
+      return await Point.update({
+        disable: true
       }, {
-        where: { idpoint }
+        where: { pointId }
       })
     } catch (err) {
       console.log(err)
-      return err
+      throw new ServerError()
     }
   }
 }

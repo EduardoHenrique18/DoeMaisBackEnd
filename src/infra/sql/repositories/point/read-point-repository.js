@@ -1,4 +1,5 @@
 const Point = require('../../entities-db/point')
+const ServerError = require('../../../../utils/errors/server-error')
 
 module.exports = class ReadPointRepository {
   async ReadPointByLongAndLat (point) {
@@ -13,7 +14,18 @@ module.exports = class ReadPointRepository {
       })
       return read
     } catch (err) {
-      return err
+      throw new ServerError()
+    }
+  }
+
+  async ReadAllPoint () {
+    try {
+      const read = await Point.findAll({
+        where: { disable: false }
+      })
+      return read
+    } catch (err) {
+      throw new ServerError()
     }
   }
 }

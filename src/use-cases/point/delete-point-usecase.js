@@ -9,6 +9,7 @@ module.exports = class DeletePointUseCase {
 
   async DeletePoint (pointParam) {
     try {
+      console.log(pointParam)
       const deletePoint = await this.deletePointRepository.DeletePoint(pointParam)
 
       return this.httpResponse.Ok(deletePoint)
