@@ -1,6 +1,9 @@
 const express = require('express')
 const cors = require('cors')
 const Routes = require('./Routes')
+const swaggerUi = require('swagger-ui-express')
+
+const swaggerDocument = require('../../../swagger.json')
 
 const db = require('../sql/config/db')
 
@@ -10,6 +13,7 @@ class App {
 
     this.dataBase()
     this.middlewares()
+    this.swagger()
     this.routes()
   }
 
@@ -23,8 +27,12 @@ class App {
       })
   }
 
+  swagger () {
+    this.express.use('/apiDocs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+  }
+
   middlewares () {
-    this.express.use(express.json())
+    this.express.use(express.json({ limit: '50mb' }))
     this.express.use(cors())
   }
 

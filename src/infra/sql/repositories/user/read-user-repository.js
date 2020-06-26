@@ -1,16 +1,20 @@
 const User = require('../../entities-db/user')
+const ServerError = require('../../../../utils/errors/server-error')
 
 module.exports = class ReadUserRepository {
-  async ReadUserById (user) {
-    const { email } = user
+  async ReadUserByEmail (userParam) {
+    try {
+      const { email } = userParam
 
-    const teste = await User.findOne({
-      where: {
-        email: email
-      },
-      order: [['createdAt', 'DESC']]
-    })
+      const user = await User.findOne({
+        where: {
+          email: email
+        }
+      })
 
-    return teste
+      return user
+    } catch (err) {
+      throw new ServerError()
+    }
   }
 }

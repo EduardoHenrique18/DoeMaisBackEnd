@@ -20,4 +20,8 @@ module.exports = class HttpResponse {
   static conflictError (message) {
     return new ReturnMessage(message, 409)
   }
+
+  static unauthorizedError () {
+    return new ReturnMessage('unauthorizedError', 401)
+  }
 }

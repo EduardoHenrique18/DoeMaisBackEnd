@@ -1,7 +1,7 @@
 module.exports = class unauthorizedError extends Error {
-  constructor (code) {
-    super('Unauthorized')
+  constructor (message) {
+    super(message)
     this.name = 'UnauthorizedError'
-    this.statusCode = code
+    this.statusCode = 401
   }
 }
