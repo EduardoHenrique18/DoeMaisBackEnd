@@ -1,4 +1,4 @@
-const CreatePointUseCase = require('../create-point-usercase')
+const CreatePointUseCase = require('../create-point-usecase')
 const { InvalidParamError } = require('../../../utils/errors')
 const HttpResponse = require('../../../utils/http-response')
 
@@ -43,7 +43,7 @@ const makePointValidatorWithError = () => {
 
 const makeReadPointByEmailRepository = () => {
   class ReadPointByEmailRepositorySpy {
-    async ReadPointById (Point) {
+    async ReadPointByLongAndLat (Point) {
       this.point = Point
       if (this.point.useremail === 'AlreadyExist@email.com') {
         return HttpResponse.conflictError('Point Already Exist')
@@ -57,7 +57,7 @@ const makeReadPointByEmailRepository = () => {
 
 const makeReadPointByEmailRepositoryPointAlreadyExist = () => {
   class ReadPointByEmailRepositorySpy {
-    async ReadPointById (Point) {
+    async ReadPointByLongAndLat (Point) {
       this.point = Point
       return null
     }
@@ -68,7 +68,7 @@ const makeReadPointByEmailRepositoryPointAlreadyExist = () => {
 
 const makeReadPointByEmailRepositoryWithError = () => {
   class ReadPointByEmailRepositorySpy {
-    async ReadPointById () {
+    async ReadPointByLongAndLat () {
       throw new Error()
     }
   }
@@ -80,6 +80,7 @@ const makeCreatePointRepositorySpy = () => {
   class CreatePointByEmailRepositorySpy {
     async CreatePoint (Point) {
       this.point = Point
+      this.point.pointId = '1'
       return this.point
     }
   }
@@ -115,13 +116,11 @@ describe('Create Point UseCase', () => {
   test('Should call PointValidator with correct params', async () => {
     const { sut, pointValidatorSpy } = makeSut()
     const httpRequest = {
-      point: {
-        name: 'any_name',
-        latitude: 'any_latitude',
-        longitude: 'any_longitude',
-        description: 'any_description',
-        useremail: 'anu_email@email.com'
-      }
+      name: 'any_name',
+      latitude: 'any_latitude',
+      longitude: 'any_longitude',
+      description: 'any_description',
+      useremail: 'anu_email@email.com'
     }
     await sut.CreatePoint(httpRequest)
     expect(pointValidatorSpy.point.name).toBe(httpRequest.name)
@@ -135,7 +134,6 @@ describe('Create Point UseCase', () => {
       longitude: 'any_longitude',
       description: 'any_description',
       useremail: 'any_email@email.com'
-
     }
     await sut.CreatePoint(httpRequest)
     expect(readPointRepositorySpy.point.name).toBe(httpRequest.name)
@@ -235,12 +233,16 @@ describe('Create Point UseCase', () => {
       )
     const httpRequest = {
       name: 'any_name',
+      image: 'base64:aisdãosl,kd2121e2w9392jf',
       latitude: 'any_latitude',
       longitude: 'any_longitude',
       description: 'any_description',
-      useremail: 'AlreadyExist@email.com'
+      userId: '1',
+      pointId: '1'
     }
+
     const httpResponse = await sut.CreatePoint(httpRequest)
+    console.log(httpResponse.data)
     expect(httpResponse.statusCode).toBe(200)
     expect(httpResponse.message).toBe('Successfully')
     expect(httpResponse.data).toEqual(httpRequest)

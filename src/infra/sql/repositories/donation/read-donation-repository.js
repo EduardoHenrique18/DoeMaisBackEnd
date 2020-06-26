@@ -5,13 +5,11 @@ const Point = require('../../entities-db/point')
 module.exports = class ReadDonationRepository {
   async ReadDonationByPointId (pointId) {
     try {
-      const read = await Donation.findAll({
-        where: { pointId: pointId },
-        include: [{
-          association: Point
-        }]
-      })
-      return read
+      const results = await Point.sequelize.query(`SELECT * FROM donations as donations
+                                                INNER JOIN users ON donations.userId = users.userId 
+                                                WHERE donations.pointId = ${pointId} AND
+                                                donations.isPublic = true`)
+      return results[0]
     } catch (err) {
       console.log(err)
       throw new ServerError()

@@ -1,4 +1,3 @@
-const InvalidParamError = require('../../utils/errors/invalid-param-error')
 const HttpResponse = require('../../utils/http-response')
 
 module.exports = class ReadAllPointUseCase {
@@ -13,13 +12,8 @@ module.exports = class ReadAllPointUseCase {
 
       return this.httpResponse.Ok(points)
     } catch (error) {
-      if (error instanceof InvalidParamError) {
-        console.log(error)
-        return this.httpResponse.InvalidParamError(error.message)
-      } else {
-        console.log(error)
-        return this.httpResponse.ServerError()
-      }
+      console.log(error)
+      return this.httpResponse.ServerError()
     }
   }
 }

@@ -8,7 +8,7 @@ module.exports = class UpdatePointController {
     this.updatePointRepository = new UpdatePointRepository()
     this.readPointRepository = new ReadPointRepository()
     this.pointValidator = new PointValidator()
-    this.updatePointUseCase = new UpdatePointUseCase(this.updatePointRepository, this.readPointRepository, this.pointValidator)
+    this.updatePointUseCase = new UpdatePointUseCase(this.updatePointRepository, this.pointValidator)
   }
 
   async UpdatePoint (request, response) {

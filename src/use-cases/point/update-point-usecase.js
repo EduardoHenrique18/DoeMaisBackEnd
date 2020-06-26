@@ -3,10 +3,9 @@ const InvalidParamError = require('../../utils/errors/invalid-param-error')
 const HttpResponse = require('../../utils/http-response')
 
 module.exports = class UpdatePointUseCase {
-  constructor (updatePointRepository, readPointRepository, pointValidator) {
+  constructor (updatePointRepository, pointValidator) {
     this.updatePointRepository = updatePointRepository
     this.pointValidator = pointValidator
-    this.readPointRepository = readPointRepository
     this.httpResponse = HttpResponse
   }
 
@@ -20,7 +19,7 @@ module.exports = class UpdatePointUseCase {
 
       await this.updatePointRepository.UpdatePoint(point)
 
-      return this.httpResponse.Ok({ user: name, latitude, longitude, description, image, userId, pointId })
+      return this.httpResponse.Ok({ name, latitude, longitude, description, image, userId, pointId })
     } catch (error) {
       if (error instanceof InvalidParamError) {
         console.log(error)

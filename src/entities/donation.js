@@ -1,4 +1,4 @@
-module.exports = class Point {
+module.exports = class Donation {
   constructor (name, description, image, isPublic, userId, pointId, donationId) {
     this.name = name
     this.description = description

@@ -1,5 +1,5 @@
 const ReadByPointIdDonationUseCase = require('../../use-cases/donation/readByPointId-donation-usecase')
-const ReadDonationRepository = require('../../Infra/Sql/Repositories/Donation/read-donation-repository')
+const ReadDonationRepository = require('../../infra/sql/repositories/donation/read-donation-repository')
 const DonationValidator = require('../../utils/validators/donation-validator')
 
 module.exports = class ReadByPointIdDonationController {
