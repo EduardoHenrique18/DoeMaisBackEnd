@@ -13,9 +13,9 @@ module.exports = class LoginUseCase {
 
   async Login (userParam) {
     try {
-      const { userName, password, dateOfBirth, email } = userParam
+      const { password, email } = userParam
 
-      const user = new User(userName, password, dateOfBirth, email)
+      const user = new User('userName', password, 'dateOfBirth', email)
 
       this.userValidator.LoginValidator(user)
 
@@ -31,7 +31,7 @@ module.exports = class LoginUseCase {
         return this.httpResponse.unauthorizedError()
       }
 
-      const token = await this.tokenGenerator.generate(userSearched.userId)
+      const token = await this.tokenGenerator.generate(userSearched._id.toString())
       return this.httpResponse.Ok({ userSearched, token })
     } catch (error) {
       if (error instanceof InvalidParamError) {

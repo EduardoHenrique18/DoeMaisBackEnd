@@ -6,13 +6,7 @@ module.exports = class ReadUserRepository {
     try {
       const { email } = userParam
 
-      const user = await User.findOne({
-        where: {
-          email: email
-        }
-      })
-
-      return user
+      return await User.findOne({ email })
     } catch (err) {
       throw new ServerError()
     }
