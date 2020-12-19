@@ -1,42 +1,47 @@
-const Sequelize = require('../config/db')
-const { DataTypes } = require('sequelize')
+const mongoose = require('mongoose')
 
-const Point = Sequelize.define('point', {
-  pointId: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
+const Schema = mongoose.Schema
+
+const pointSchema = new Schema({
   name: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true,
+    trim: true
   },
   latitude: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true,
+    trim: true
   },
   longitude: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true,
+    trim: true
   },
   description: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true,
+    trim: true
   },
   userId: {
-    type: DataTypes.STRING,
-    references: 'users',
-    referencesKey: 'userId'
+    type: String,
+    required: true,
+    trim: true
   },
   disable: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
+    type: String,
+    required: true,
+    trim: true
   },
   image: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
-  createdAt: { type: DataTypes.DATE }
+    type: String,
+    required: true,
+    trim: true
+  }
+}, {
+  timestamps: true
 })
+
+const Point = mongoose.model('Point', pointSchema)
 
 module.exports = Point

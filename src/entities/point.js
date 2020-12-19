@@ -1,5 +1,5 @@
 module.exports = class Point {
-  constructor (name, latitude, longitude, description, userId, image, pointId) {
+  constructor (name, latitude, longitude, description, userId, image, pointId, disable) {
     this.name = name
     this.latitude = latitude
     this.longitude = longitude
@@ -7,5 +7,6 @@ module.exports = class Point {
     this.userId = userId
     this.image = image
     this.pointId = pointId
+    this.disable = disable
   }
 }

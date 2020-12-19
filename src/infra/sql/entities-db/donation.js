@@ -1,48 +1,44 @@
-const Sequelize = require('../config/db')
-const { DataTypes } = require('sequelize')
+const mongoose = require('mongoose')
 
-const Donation = Sequelize.define('Donation', {
-  donationId: {
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true,
-    type: DataTypes.INTEGER
-  },
+const Schema = mongoose.Schema
+
+const donationSchema = new Schema({
   name: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: String,
+    required: true,
+    trim: true
   },
   description: {
-    allowNull: false,
-    type: DataTypes.STRING
+    type: String,
+    required: true,
+    trim: true
   },
   image: {
-    allowNull: false,
-    type: DataTypes.TEXT
+    type: String,
+    required: true,
+    trim: true
   },
   pointId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'Points',
-      key: 'pointId'
-    }
+    type: Number,
+    required: true
   },
   userId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'Users',
-      key: 'userId'
-    }
+    type: Number,
+    required: true
   },
   disable: {
-    type: DataTypes.BOOLEAN
+    type: Boolean,
+    required: true
   },
   public: {
-    type: DataTypes.BOOLEAN
-  },
-  createdAt: {
-    type: DataTypes.DATE
+    type: String,
+    required: true,
+    trim: true
   }
+}, {
+  timestamps: true
 })
 
-module.exports = Donation
+const Donation = mongoose.model('Donation', donationSchema)
+
+module.exports = Donation;
