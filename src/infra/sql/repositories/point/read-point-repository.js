@@ -5,14 +5,7 @@ module.exports = class ReadPointRepository {
   async ReadPointByLongAndLat (point) {
     try {
       const { longitude, latitude } = point
-
-      const read = await Point.findOne({
-        where: {
-          longitude: longitude,
-          latitude: latitude
-        }
-      })
-      return read
+      return await Point.findOne({ longitude, latitude })
     } catch (err) {
       throw new ServerError()
     }
@@ -20,10 +13,7 @@ module.exports = class ReadPointRepository {
 
   async ReadAllPoint () {
     try {
-      const read = await Point.findAll({
-        where: { disable: false }
-      })
-      return read
+      return await Point.find({ disable: 'false' })
     } catch (err) {
       throw new ServerError()
     }

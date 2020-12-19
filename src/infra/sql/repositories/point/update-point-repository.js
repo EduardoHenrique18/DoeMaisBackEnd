@@ -6,16 +6,7 @@ module.exports = class UpdatePointRepository {
     try {
       const { pointId, name, latitude, longitude, description, image, userEmail } = point
 
-      return Point.update({
-        name,
-        image,
-        latitude,
-        longitude,
-        description,
-        userEmail
-      }, {
-        where: { pointId }
-      })
+      return await Point.findOneAndUpdate(pointId, { name, latitude, longitude, description, image, userEmail })
     } catch (err) {
       throw new ServerError()
     }

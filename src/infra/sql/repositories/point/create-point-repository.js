@@ -2,19 +2,13 @@ const Point = require('../../entities-db/point')
 const ServerError = require('../../../../utils/errors/server-error')
 
 module.exports = class CreatePointRepository {
-  CreatePoint (point) {
+  async CreatePoint (point) {
     try {
-      const { name, latitude, longitude, description, userId, image } = point
+      const { name, latitude, longitude, description, userId, image, disable } = point
 
-      return Point.create({
-        name,
-        latitude,
-        longitude,
-        description,
-        image,
-        userId
-      })
+      return await Point.create({ name, latitude, longitude, description, userId, image, disable })
     } catch (err) {
+      console.log(err)
       throw new ServerError()
     }
   }

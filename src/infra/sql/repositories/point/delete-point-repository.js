@@ -6,11 +6,9 @@ module.exports = class DeletePointRepository {
     try {
       const { pointId } = point
 
-      return await Point.update({
-        disable: true
-      }, {
-        where: { pointId }
-      })
+      const _id = pointId
+
+      return await Point.deleteOne({ _id })
     } catch (err) {
       console.log(err)
       throw new ServerError()
