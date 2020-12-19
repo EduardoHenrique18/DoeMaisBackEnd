@@ -1,6 +1,6 @@
 const CreateDonationUseCase = require('../../use-cases/donation/create-donation-usecase')
-const CreateDonationRepository = require('../../Infra/Sql/Repositories/Donation/create-donation-repository')
-const ReadDonationRepository = require('../../infra/sql/repositories/donation/create-donation-repository')
+const CreateDonationRepository = require('../../infra/sql/repositories/donation/create-donation-repository')
+const ReadDonationRepository = require('../../infra/sql/repositories/donation/read-donation-repository')
 const DonationValidator = require('../../utils/validators/donation-validator')
 
 module.exports = class CreateDonationController {
